@@ -70,6 +70,6 @@ func show_text(text):
 		s = Vector2(48,48)
 	$key_prompt.custom_minimum_size = s
 	$key_prompt.size = s
-	$key_prompt/Label.add_theme_font_override('font',
-		small_font if small else large_font)
+	#$key_prompt/Label.add_theme_font_override('font',
+	#	small_font if small else large_font)
 	size = s

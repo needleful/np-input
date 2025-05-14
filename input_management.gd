@@ -1,13 +1,7 @@
 extends Node
 
 const INPUT_EPSILON := 0.1
-var input_buffer := {
-	'mv_jump':INF,
-	'mv_crouch':INF,
-	'combat_lunge':INF,
-	'combat_spin':INF,
-	'hover_toggle':INF,
-}
+var input_buffer := {}
 
 var using_gamepad := true
 var allow_input := true
@@ -15,7 +9,6 @@ var allow_input := true
 func _ready():
 	# TODO: time_scale_response = false
 	process_mode = Node.PROCESS_MODE_ALWAYS
-	add_to_group('player_fixed_process')
 
 func _input(event: InputEvent):
 	if allow_input:
@@ -34,13 +27,6 @@ func _input(event: InputEvent):
 func _fixed_process(delta: float):
 	for e in input_buffer.keys():
 		input_buffer[e] += delta
-
-func is_ui_action(event: InputEvent):
-	return (
-		event.is_action_pressed('ui_up')
-		or event.is_action_pressed('ui_down')
-		or event.is_action_pressed('ui_left')
-		or event.is_action_pressed('ui_right'))
 
 func pressed(action:String):
 	if !allow_input:
