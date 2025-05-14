@@ -10,7 +10,7 @@ var input_buffer := {
 }
 
 var using_gamepad := true
-var ui: MainUI
+var allow_input := true
 
 func _ready():
 	# TODO: time_scale_response = false
@@ -18,8 +18,7 @@ func _ready():
 	add_to_group('player_fixed_process')
 
 func _input(event: InputEvent):
-	var should_read:bool = is_instance_valid(ui) and ui.is_playing()
-	if should_read:
+	if allow_input:
 		for e in input_buffer.keys():
 			if event.is_action_pressed(e) and Input.is_action_just_pressed(e):
 				input_buffer[e] = 0.0
@@ -29,9 +28,7 @@ func _input(event: InputEvent):
 	elif event is InputEventMouse or event is InputEventKey:
 		using_gamepad = false
 	
-	if ( ogg != using_gamepad and 
-		Settings.sub_options['Controls'].button_prompts == ControlsSettings.Prompts.AutoDetect
-	):
+	if ogg != using_gamepad:
 		get_tree().call_group('input_prompt', '_refresh')
 
 func _fixed_process(delta: float):
@@ -46,20 +43,21 @@ func is_ui_action(event: InputEvent):
 		or event.is_action_pressed('ui_right'))
 
 func pressed(action:String):
+	if !allow_input:
+		return false
 	if action in input_buffer:
 		var res:bool = input_buffer[action] < INPUT_EPSILON
-		var blocked:bool = ui.input_blocked
 		input_buffer[action] = INF
-		return res and !blocked
+		return res
 	else:
-		return Input.is_action_just_pressed(action) and !ui.input_blocked
+		return Input.is_action_just_pressed(action)
 
 func released(action:String):
-	return Input.is_action_just_released(action) and !ui.input_blocked
+	return Input.is_action_just_released(action)
 
 func holding(action:String):
 	var i := Input.get_action_strength(action) > 0.0
-	return i
+	return allow_input and i
 
 func get_action_input_string(action: String, override = null):
 	var gamepad

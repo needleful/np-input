@@ -14,7 +14,7 @@ const vis_remap := {
 }
 
 # device/input event
-const prompt_path := 'res://ui/prompts/%s/%s.png'
+const prompt_path := 'res://addons/gd-input/prompts/%s/%s.png'
 
 func _ready():
 	default_size = size
