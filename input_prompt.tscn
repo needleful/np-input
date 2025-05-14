@@ -1,0 +1,66 @@
+[gd_scene load_steps=8 format=2]
+
+[ext_resource type="FontFile" uid="uid://bdx0bgim3ghqs" path="res://ui/fonts/averia/Averia-Bold.ttf" id="1"]
+[ext_resource type="Theme" uid="uid://b6kxt46nvdt63" path="res://ui/theming/default_theme.tres" id="2"]
+[ext_resource type="Texture2D" uid="uid://csdj4m7psph0b" path="res://ui/prompts/pad_generic/gamepad4.png" id="3"]
+[ext_resource type="Script" uid="uid://btrrajadxnpl8" path="res://ui/components/input_prompt.gd" id="4"]
+
+
+[sub_resource type="FontFile" id=2]
+size = 32
+font_data = ExtResource( 1 )
+
+[sub_resource type="FontFile" id=3]
+size = 28
+font_data = ExtResource( 1 )
+
+[sub_resource type="StyleBoxFlat" id=1]
+bg_color = Color( 1, 1, 1, 0.670588 )
+border_width_left = 5
+border_width_top = 5
+border_width_right = 5
+border_width_bottom = 5
+border_color = Color( 0, 0, 0, 1 )
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[node name="input_prompt" type="CenterContainer" groups=["input_prompt"]]
+offset_right = 83.0
+offset_bottom = 64.0
+size_flags_horizontal = 5
+size_flags_vertical = 5
+script = ExtResource( 4 )
+action = "reset"
+large_font = SubResource( 2 )
+small_font = SubResource( 3 )
+
+[node name="key_prompt" type="PanelContainer" parent="."]
+offset_right = 83.0
+offset_bottom = 64.0
+custom_minimum_size = Vector2( 64, 64 )
+theme = ExtResource( 2 )
+theme_override_styles/panel = SubResource( 1 )
+
+[node name="Label" type="Label" parent="key_prompt"]
+offset_left = 5.0
+offset_top = 14.0
+offset_right = 78.0
+offset_bottom = 50.0
+theme_override_colors/font_color = Color( 0, 0, 0, 1 )
+theme_override_fonts/font = SubResource( 2 )
+text = "reset"
+align = 1
+
+[node name="texture" type="TextureRect" parent="."]
+visible = false
+offset_left = 41.0
+offset_top = 32.0
+offset_right = 41.0
+offset_bottom = 32.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+texture = ExtResource( 3 )
+expand = true
+stretch_mode = 6
