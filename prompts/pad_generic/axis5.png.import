@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dawtt07nskbc5"
-path="res://.godot/imported/axis5.png-d82e88a34a51c694874855dd67ea6ac9.ctex"
+path="res://.godot/imported/axis5.png-a28982c047c77c7c9fa26b74c54ef727.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/gd-input/prompts/pad_generic/axis5.png"
-dest_files=["res://.godot/imported/axis5.png-d82e88a34a51c694874855dd67ea6ac9.ctex"]
+source_file="res://addons/np-input/prompts/pad_generic/axis5.png"
+dest_files=["res://.godot/imported/axis5.png-a28982c047c77c7c9fa26b74c54ef727.ctex"]
 
 [params]
 
