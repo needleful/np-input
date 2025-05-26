@@ -9,6 +9,7 @@ var allow_input := true
 func _ready():
 	# TODO: time_scale_response = false
 	process_mode = Node.PROCESS_MODE_ALWAYS
+	get_tree().call_group('input_prompt', '_refresh')
 
 func _input(event: InputEvent):
 	if allow_input:
