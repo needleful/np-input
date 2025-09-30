@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://dnfwlsqgy03al"]
 
-[ext_resource type="Texture2D" uid="uid://csdj4m7psph0b" path="res://addons/np-input/prompts/pad_generic/gamepad4.png" id="3"]
-[ext_resource type="Script" uid="uid://buk61vkur25wf" path="res://addons/np-input/input_prompt.gd" id="4"]
+[ext_resource type="Texture2D" uid="uid://ctskmack54mgm" path="res://addons/np-input/prompts/pad_generic/axis4.png" id="2_y8yxi"]
+[ext_resource type="Script" path="res://addons/np-input/input_prompt.gd" id="4"]
 
 [sub_resource type="StyleBoxFlat" id="1"]
 bg_color = Color(1, 1, 1, 0.670588)
@@ -50,6 +50,6 @@ visible = false
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-texture = ExtResource("3")
+texture = ExtResource("2_y8yxi")
 expand_mode = 1
 stretch_mode = 6
