@@ -13,6 +13,9 @@ func _ready():
 	get_tree().call_group('input_prompt', '_refresh')
 
 func _input(event: InputEvent):
+	# Do not accept input when pressing a button
+	if get_viewport().gui_get_focus_owner() and event.is_action_pressed('ui_accept'):
+		return
 	if allow_input:
 		for e in input_buffer.keys():
 			if event.is_action_pressed(e) and Input.is_action_just_pressed(e):
@@ -29,6 +32,9 @@ func _input(event: InputEvent):
 func _fixed_process(delta: float):
 	for e in input_buffer.keys():
 		input_buffer[e] += delta
+
+func reset(key: String):
+	input_buffer[key] = INF
 
 func pressed(action:String):
 	if !allow_input:
