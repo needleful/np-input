@@ -1,4 +1,5 @@
 @tool
+class_name InputPrompt
 extends Control
 
 @export var action: String: set = set_action
