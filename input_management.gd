@@ -4,6 +4,8 @@ extends Node
 const INPUT_EPSILON := 0.1
 var input_buffer:Dictionary[String, float] = {}
 
+@export var detect_gyro := false
+
 var using_gamepad := true
 var allow_input := true
 
