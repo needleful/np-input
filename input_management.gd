@@ -23,7 +23,7 @@ func _input(event: InputEvent):
 			if event.is_action_pressed(e) and Input.is_action_just_pressed(e):
 				input_buffer[e] = 0.0
 	var ogg := using_gamepad
-	if event is InputEventJoypadButton or event is InputEventJoypadMotion:
+	if event is InputEventJoypadButton or (event is InputEventJoypadMotion and abs(event.axis_value) > 0.1):
 		using_gamepad = true
 	elif event is InputEventMouse or event is InputEventKey:
 		using_gamepad = false
