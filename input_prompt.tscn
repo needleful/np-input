@@ -32,6 +32,7 @@ size_flags_horizontal = 5
 size_flags_vertical = 5
 script = ExtResource("4")
 action = "reset"
+image_scale = null
 
 [node name="key_prompt" type="PanelContainer" parent="."]
 custom_minimum_size = Vector2(83, 64)

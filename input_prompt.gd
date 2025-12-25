@@ -3,6 +3,8 @@ class_name InputPrompt
 extends Control
 
 @export var action: String: set = set_action
+@export_range(0.1, 2.0) var image_scale := 1.0
+# For backwards-compatibility
 @export var small := false
 @export var large_font: Font
 @export var small_font: Font
@@ -59,6 +61,7 @@ func show_image(image: Texture2D):
 	var s = image.get_size()
 	if small:
 		s /= 3
+	s *= image_scale
 	size = s
 	$texture.custom_minimum_size = s
 
@@ -69,6 +72,7 @@ func show_text(text):
 	var s := default_size
 	if small:
 		s = Vector2(48,48)
+	s *= image_scale
 	$key_prompt.custom_minimum_size = s
 	$key_prompt.size = s
 	#$key_prompt/Label.add_theme_font_override('font',
