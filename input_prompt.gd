@@ -6,8 +6,6 @@ extends Control
 @export_range(0.1, 2.0) var image_scale := 1.0
 # For backwards-compatibility
 @export var small := false
-@export var large_font: Font
-@export var small_font: Font
 
 var default_size := Vector2(64, 64)
 
@@ -75,6 +73,4 @@ func show_text(text):
 	s *= image_scale
 	$key_prompt.custom_minimum_size = s
 	$key_prompt.size = s
-	#$key_prompt/Label.add_theme_font_override('font',
-	#	small_font if small else large_font)
 	size = s

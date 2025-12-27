@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://dnfwlsqgy03al"]
+[gd_scene load_steps=4 format=3 uid="uid://dnfwlsqgy03al"]
 
 [ext_resource type="Texture2D" uid="uid://ctskmack54mgm" path="res://addons/np-input/prompts/pad_generic/axis4.png" id="2_y8yxi"]
 [ext_resource type="Script" uid="uid://buk61vkur25wf" path="res://addons/np-input/input_prompt.gd" id="4"]
@@ -15,16 +15,6 @@ corner_radius_top_right = 10
 corner_radius_bottom_right = 10
 corner_radius_bottom_left = 10
 
-[sub_resource type="FontFile" id="2"]
-subpixel_positioning = 0
-msdf_pixel_range = 14
-msdf_size = 128
-cache/0/16/0/ascent = 0.0
-cache/0/16/0/descent = 0.0
-cache/0/16/0/underline_position = 0.0
-cache/0/16/0/underline_thickness = 0.0
-cache/0/16/0/scale = 1.0
-
 [node name="input_prompt" type="CenterContainer" groups=["input_prompt"]]
 offset_right = 83.0
 offset_bottom = 64.0
@@ -32,7 +22,6 @@ size_flags_horizontal = 5
 size_flags_vertical = 5
 script = ExtResource("4")
 action = "reset"
-image_scale = null
 
 [node name="key_prompt" type="PanelContainer" parent="."]
 custom_minimum_size = Vector2(83, 64)
@@ -43,7 +32,6 @@ theme_override_styles/panel = SubResource("1")
 layout_mode = 2
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 0
-theme_override_fonts/font = SubResource("2")
 text = "reset"
 horizontal_alignment = 1
 

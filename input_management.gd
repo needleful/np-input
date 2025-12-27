@@ -1,10 +1,33 @@
 @tool
+class_name NPInputManager
 extends Node
+
+enum PromptMode {
+	# Automatically detect what prompts to use
+	Auto,
+	# Only show gamepad prompts
+	Gamepad,
+	# Only show keyboard/mouse prompts
+	Keyboard
+}
+# Type of controller detected (for prompting)
+enum Gamepad {
+	# Unknown gamepad
+	Generic,
+	# XBox buttons
+	XBox,
+	Playstation,
+	# Gamecube/Switch-style buttons
+	Nintendo
+}
 
 const INPUT_EPSILON := 0.1
 var input_buffer:Dictionary[String, float] = {}
 
-@export var detect_gyro := false
+@export var prompt_mode := PromptMode.Auto
+# Swap A/B and X/Y input when using a Nintendo controller
+# TODO: implement
+@export var nintendo_swap := false
 
 var using_gamepad := true
 var allow_input := true
@@ -22,18 +45,27 @@ func _input(event: InputEvent):
 		for e in input_buffer.keys():
 			if event.is_action_pressed(e) and Input.is_action_just_pressed(e):
 				input_buffer[e] = 0.0
+
 	var ogg := using_gamepad
-	if event is InputEventJoypadButton or (event is InputEventJoypadMotion and abs(event.axis_value) > 0.1):
-		using_gamepad = true
-	elif event is InputEventMouse or event is InputEventKey:
-		using_gamepad = false
-	
+	match prompt_mode:
+		PromptMode.Gamepad:
+			using_gamepad = true
+		PromptMode.Keyboard:
+			using_gamepad = false
+		_:
+			if event is InputEventJoypadButton or (event is InputEventJoypadMotion and abs(event.axis_value) > 0.2):
+				using_gamepad = true
+			elif event is InputEventMouse or event is InputEventKey:
+				using_gamepad = false
 	if ogg != using_gamepad:
 		get_tree().call_group('input_prompt', '_refresh')
 
 func _fixed_process(delta: float):
 	for e in input_buffer.keys():
 		input_buffer[e] += delta
+
+func set_prompt_mode(mode: int):
+	prompt_mode = mode as PromptMode
 
 func reset(key: String):
 	input_buffer[key] = INF
