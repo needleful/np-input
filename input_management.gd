@@ -29,6 +29,17 @@ var input_buffer:Dictionary[String, float] = {}
 # TODO: implement
 @export var nintendo_swap := false
 
+@export_group('Custom Paths', 'custom_')
+@export_dir var custom_play_station := ''
+@export_dir var custom_x_box := ''
+@export_dir var custom_nintendo := ''
+@export_dir var custom_generic := ''
+@export_dir var custom_keyboard := ''
+
+# device/input event
+const f_prompt_path := 'res://addons/np-input/prompts/%s/%s.png'
+
+var gamepad_type := Gamepad.Generic
 var using_gamepad := true
 var allow_input := true
 
@@ -131,6 +142,32 @@ func get_input_string(input:InputEvent):
 	elif input is InputEventJoypadMotion:
 		return 'axis'+str(input.axis)
 	return str(input)
+
+func load_input_image(input_str: String) -> Texture2D:
+	var custom_prompt: String
+	if using_gamepad:
+		match gamepad_type:
+			Gamepad.Nintendo:
+				custom_prompt = custom_nintendo
+			Gamepad.Playstation:
+				custom_prompt = custom_play_station
+			Gamepad.XBox:
+				custom_prompt = custom_x_box
+			_:
+				custom_prompt = custom_generic
+	else:
+		custom_prompt = custom_keyboard
+	var prompt : String
+	if custom_prompt:
+		prompt = '%s/%s.png' % [custom_prompt, input_str]
+	else:
+		var device = 'pad_generic' if using_gamepad else 'keyboard'
+		prompt = f_prompt_path % [device, input_str]
+		
+	if ResourceLoader.exists(prompt):
+		return load(prompt)
+	else:
+		return null
 
 func get_mouse_zoom_axis() -> float:
 	return 15*( float(Input.is_action_just_released('mouse_zoom_in'))

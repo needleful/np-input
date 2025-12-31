@@ -35,11 +35,23 @@ theme_override_constants/outline_size = 0
 text = "reset"
 horizontal_alignment = 1
 
-[node name="texture" type="TextureRect" parent="."]
+[node name="image_prompt" type="HBoxContainer" parent="."]
 visible = false
+layout_mode = 2
+
+[node name="texture" type="TextureRect" parent="image_prompt"]
+custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 texture = ExtResource("2_y8yxi")
 expand_mode = 1
 stretch_mode = 6
+
+[node name="custom_text" type="Label" parent="image_prompt"]
+layout_mode = 2
+text = "Extra Text"
+
+[node name="Control" type="Control" parent="image_prompt"]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2

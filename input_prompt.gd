@@ -9,13 +9,36 @@ extends Control
 
 var default_size := Vector2(64, 64)
 
-const vis_remap := {
-	'axis6':'gamepad6',
-	'axis7':'gamepad7'
+const IG = InputManagement.Gamepad
+# Any inputs that require translated text
+const required_text = {
+	IG.Playstation: {
+		'gamepad4':'Share',
+		'gamepad6':'Options',
+		'gamepad9':'L1',
+		'gamepad10':'R1',
+		'axis4':'L2',
+		'axis5':'R2',
+	},
+	IG.Nintendo: {
+		'gamepad4':'Minus (-)',
+		'gamepad6':'Plus (+)',
+		'gamepad9':'L',
+		'gamepad10':'R',
+		'axis4':'ZL',
+		'axis5':'ZR',
+	},
+	IG.Generic: {
+		'gamepad4':'Select',
+		'gamepad6':'Start',
+		'gamepad7':'LS',
+		'gamepad8':'RS',
+		'gamepad9':'LB',
+		'gamepad10':'RB',
+		'axis4':'LT',
+		'axis5':'RT',
+	}
 }
-
-# device/input event
-const prompt_path := 'res://addons/np-input/prompts/%s/%s.png'
 
 func _ready():
 	default_size = size
@@ -32,7 +55,7 @@ func set_action(a):
 		show_text(a)
 		return
 	elif action == '':
-		$texture.hide()
+		$image_prompt.hide()
 		$key_prompt.hide()
 		return
 
@@ -42,29 +65,38 @@ func set_action(a):
 		return
 	
 	var input_str = InputManagement.get_action_input_string(action)
-	if input_str in vis_remap:
-		input_str = vis_remap[input_str]
-	var device = 'pad_generic' if InputManagement.using_gamepad else 'keyboard'
-	var prompt = prompt_path % [device, input_str]
-	if ResourceLoader.exists(prompt):
-		var t = load(prompt)
-		show_image(t)
+	var img := InputManagement.load_input_image(input_str)
+	if img:
+		var extra_text := ''
+		if InputManagement.using_gamepad:
+			var gc := InputManagement.gamepad_type
+			if input_str in required_text[gc]:
+				extra_text = required_text[gc][input_str]
+			elif input_str in required_text[IG.Generic]:
+				extra_text = required_text[IG.Generic][input_str]
+		show_image(img, extra_text)
 	else:
 		show_text(input_str)
 
-func show_image(image: Texture2D):
+func show_image(image: Texture2D, extra_text:= ''):
 	$key_prompt.hide()
-	$texture.show()
-	$texture.texture = image
+	$image_prompt.show()
+	$image_prompt/texture.texture = image
+	var c :Label = $image_prompt/custom_text
+	if extra_text:
+		c.show()
+		c.text = '['+tr(extra_text, 'button')+']'
+	else:
+		c.hide()
 	var s = image.get_size()
 	if small:
 		s /= 3
 	s *= image_scale
 	size = s
-	$texture.custom_minimum_size = s
+	$image_prompt/texture.custom_minimum_size = s
 
 func show_text(text):
-	$texture.hide()
+	$image_prompt.hide()
 	$key_prompt.show()
 	$key_prompt/Label.text = text
 	var s := default_size
