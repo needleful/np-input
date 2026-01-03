@@ -9,7 +9,7 @@ extends Control
 
 var default_size := Vector2(64, 64)
 
-const IG = InputManagement.Gamepad
+const IG = InputManagement.PromptMode
 # Any inputs that require translated text
 const required_text = {
 	IG.Playstation: {
@@ -28,7 +28,7 @@ const required_text = {
 		'axis4':'ZL',
 		'axis5':'ZR',
 	},
-	IG.Generic: {
+	IG.GenericGamepad: {
 		'gamepad4':'Select',
 		'gamepad6':'Start',
 		'gamepad7':'LS',
@@ -69,11 +69,11 @@ func set_action(a):
 	if img:
 		var extra_text := ''
 		if InputManagement.using_gamepad:
-			var gc := InputManagement.gamepad_type
+			var gc := InputManagement.prompts
 			if input_str in required_text[gc]:
 				extra_text = required_text[gc][input_str]
-			elif input_str in required_text[IG.Generic]:
-				extra_text = required_text[IG.Generic][input_str]
+			elif input_str in required_text[IG.GenericGamepad]:
+				extra_text = required_text[IG.GenericGamepad][input_str]
 		show_image(img, extra_text)
 	else:
 		show_text(input_str)
