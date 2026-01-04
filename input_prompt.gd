@@ -28,6 +28,7 @@ const required_text = {
 		'axis4':'ZL',
 		'axis5':'ZR',
 	},
+	IG.XBox: {},
 	IG.GenericGamepad: {
 		'gamepad4':'Select',
 		'gamepad6':'Start',
