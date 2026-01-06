@@ -19,6 +19,8 @@ const required_text = {
 		'gamepad10':'R1',
 		'axis4':'L2',
 		'axis5':'R2',
+		'gamepad7':'L3',
+		'gamepad8':'R3',
 	},
 	IG.Nintendo: {
 		'gamepad4':'Minus (-)',
