@@ -45,7 +45,8 @@ const required_text = {
 
 func _ready():
 	default_size = size
-	connect('visibility_changed', Callable(self, '_refresh'))
+	visibility_changed.connect(_refresh)
+	_refresh.call_deferred()
 
 func _refresh():
 	set_action(action)
