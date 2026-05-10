@@ -48,6 +48,8 @@ func _ready():
 	if action:
 		visibility_changed.connect(_refresh)
 		_refresh.call_deferred()
+	else:
+		remove_from_group('input_prompt')
 
 func _refresh():
 	set_action(action)
@@ -68,25 +70,32 @@ func set_action(a):
 		print_debug('MISSING_ACTION: ', action, ' FOR NODE: ', get_path())
 		show_text(action)
 		return
-	
-	var input_str = InputManagement.get_action_input_string(action)
-	depict(input_str)
+	var event := InputManagement.get_input_for_action(action, InputManagement.using_gamepad)
+	depict(event)
 
-func depict(input_str: String):
+func depict(event: InputEvent, mode = InputManagement.PromptMode.AutoDetect):
+	var input_str := InputManagement.get_input_string(event)
 	var img := InputManagement.load_input_image(input_str)
+	var gc: InputManagement.PromptMode
+	var gamepad : bool
+	if !mode:
+		gc = InputManagement.prompts
+		gamepad = InputManagement.using_gamepad
+	else:
+		gc = mode
+		gamepad = mode > InputManagement.PromptMode.Keyboard
 	if img:
 		var extra_text := ''
-		if InputManagement.using_gamepad:
-			var gc := InputManagement.prompts
+		if gamepad:
 			if input_str in required_text[gc]:
 				extra_text = required_text[gc][input_str]
 			elif input_str in required_text[IG.GenericGamepad]:
 				extra_text = required_text[IG.GenericGamepad][input_str]
-		show_image(img, extra_text)
+		_show_image(img, extra_text)
 	else:
 		show_text(input_str)
 
-func show_image(image: Texture2D, extra_text:= ''):
+func _show_image(image: Texture2D, extra_text:= ''):
 	$key_prompt.hide()
 	$image_prompt.show()
 	$image_prompt/texture.texture = image

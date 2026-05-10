@@ -33,6 +33,8 @@ var input_buffer:Dictionary[String, float] = {}
 const f_prompt_path := 'res://addons/np-input/prompts/%s/%s.png'
 
 var prompts := prompt_mode
+var gamepad_mode := PromptMode.GenericGamepad
+
 var using_gamepad: bool:
 	get:
 		return prompts > PromptMode.Keyboard
@@ -88,6 +90,7 @@ func detect_gamepad_type(device: int) -> PromptMode:
 		type = PromptMode.GenericGamepad
 	known_devices[dname] = type
 	print('New controler: %d (%s: %s)' % [device, dname, PromptMode.keys()[type]])
+	gamepad_mode = prompt_mode
 	return type
 
 func set_prompt_mode(mode: int):
@@ -118,21 +121,13 @@ static func default_input_for_action(action: String, gamepad: bool) -> InputEven
 	if not settings:
 		push_error('No such action: ', action)
 		return null
-	for event in settings.events:
-		if gamepad and (
-			event is InputEventJoypadButton
-			or event is InputEventJoypadMotion
-		):
-			return event
-		elif !gamepad and (
-			event is InputEventKey
-			or event is InputEventMouseButton
-		):
-			return event
-	return null
+	return _first_action(settings.events, gamepad)
 
 static func get_input_for_action(action: String, gamepad: bool) -> InputEvent:
-	for event in InputMap.action_get_events(action):
+	return _first_action(InputMap.action_get_events(action), gamepad)
+
+static func _first_action(list: Array, gamepad: bool) -> InputEvent:
+	for event in list:
 		if gamepad and (
 			event is InputEventJoypadButton
 			or event is InputEventJoypadMotion
@@ -154,18 +149,10 @@ func get_action_input_string(action: String, override = null):
 
 	var input := get_input_for_action(action, gamepad)
 	
-	if input is InputEventKey:
-		var keycode = input.physical_keycode
-		if !keycode:
-			keycode = input.keycode
-		var key_str = OS.get_keycode_string(keycode)
-		if key_str == '':
-			key_str = '<unbound>'
-		return key_str
 
 	return get_input_string(input)
 
-func get_input_string(input:InputEvent):
+func get_input_string(input:InputEvent) -> String:
 	if input is InputEventJoypadButton:
 		return 'gamepad'+str(input.button_index)
 	elif input is InputEventJoypadMotion:
@@ -174,6 +161,14 @@ func get_input_string(input:InputEvent):
 		return 'mouse'+str(input.button_index)
 	elif input is InputEventJoypadMotion:
 		return 'axis'+str(input.axis)
+	elif input is InputEventKey:
+		var keycode = input.physical_keycode
+		if !keycode:
+			keycode = input.keycode
+		var key_str = OS.get_keycode_string(keycode)
+		if key_str == '':
+			key_str = '<unbound>'
+		return key_str
 	return str(input)
 
 func load_input_image(input_str: String) -> Texture2D:
