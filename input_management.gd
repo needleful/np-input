@@ -113,28 +113,28 @@ func holding(action:String):
 	var i := Input.get_action_strength(action) > 0.0
 	return allow_input and i
 
-func get_action_input_string(action: String, override = null):
-	var gamepad
-	if override != null:
-		gamepad = override
-	else:
-		gamepad = using_gamepad
-		
-	var input: InputEvent
+static func get_input_for_action(action: String, gamepad: bool) -> InputEvent:
 	for event in InputMap.action_get_events(action):
 		if gamepad and (
 			event is InputEventJoypadButton
 			or event is InputEventJoypadMotion
 		):
-			input = event
-			break
-
+			return event
 		elif !gamepad and (
 			event is InputEventKey
 			or event is InputEventMouseButton
 		):
-			input = event
-			break
+			return event
+	return null
+
+func get_action_input_string(action: String, override = null):
+	var gamepad: bool
+	if override != null:
+		gamepad = override
+	else:
+		gamepad = using_gamepad
+
+	var input := get_input_for_action(action, gamepad)
 	
 	if input is InputEventKey:
 		var keycode = input.physical_keycode
