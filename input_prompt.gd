@@ -45,8 +45,9 @@ const required_text = {
 
 func _ready():
 	default_size = size
-	visibility_changed.connect(_refresh)
-	_refresh.call_deferred()
+	if action:
+		visibility_changed.connect(_refresh)
+		_refresh.call_deferred()
 
 func _refresh():
 	set_action(action)
@@ -55,10 +56,10 @@ func set_action(a):
 	action = a
 	if !is_inside_tree():
 		return
-	elif Engine.is_editor_hint():
+	if Engine.is_editor_hint():
 		show_text(a)
 		return
-	elif action == '':
+	if action == '':
 		$image_prompt.hide()
 		$key_prompt.hide()
 		return
@@ -69,6 +70,9 @@ func set_action(a):
 		return
 	
 	var input_str = InputManagement.get_action_input_string(action)
+	depict(input_str)
+
+func depict(input_str: String):
 	var img := InputManagement.load_input_image(input_str)
 	if img:
 		var extra_text := ''

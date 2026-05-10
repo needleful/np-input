@@ -113,6 +113,24 @@ func holding(action:String):
 	var i := Input.get_action_strength(action) > 0.0
 	return allow_input and i
 
+static func default_input_for_action(action: String, gamepad: bool) -> InputEvent:
+	var settings:Dictionary = ProjectSettings['input/'+action]
+	if not settings:
+		push_error('No such action: ', action)
+		return null
+	for event in settings.events:
+		if gamepad and (
+			event is InputEventJoypadButton
+			or event is InputEventJoypadMotion
+		):
+			return event
+		elif !gamepad and (
+			event is InputEventKey
+			or event is InputEventMouseButton
+		):
+			return event
+	return null
+
 static func get_input_for_action(action: String, gamepad: bool) -> InputEvent:
 	for event in InputMap.action_get_events(action):
 		if gamepad and (
