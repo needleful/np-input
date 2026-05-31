@@ -15,11 +15,12 @@ corner_radius_top_right = 10
 corner_radius_bottom_right = 10
 corner_radius_bottom_left = 10
 
-[node name="input_prompt" type="CenterContainer" groups=["input_prompt"]]
+[node name="input_prompt" type="HBoxContainer" groups=["input_prompt"]]
 offset_right = 83.0
 offset_bottom = 64.0
 size_flags_horizontal = 5
 size_flags_vertical = 5
+alignment = 1
 script = ExtResource("4")
 action = "reset"
 
