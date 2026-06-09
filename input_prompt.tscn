@@ -16,7 +16,7 @@ corner_radius_bottom_right = 10
 corner_radius_bottom_left = 10
 
 [node name="input_prompt" type="HBoxContainer" groups=["input_prompt"]]
-offset_right = 83.0
+offset_right = 170.0
 offset_bottom = 64.0
 size_flags_horizontal = 5
 size_flags_vertical = 5
@@ -25,9 +25,9 @@ script = ExtResource("4")
 action = "reset"
 
 [node name="key_prompt" type="PanelContainer" parent="."]
-visible = false
-custom_minimum_size = Vector2(83, 64)
+custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
+size_flags_horizontal = 4
 theme_override_styles/panel = SubResource("1")
 
 [node name="Label" type="Label" parent="key_prompt"]
@@ -38,6 +38,7 @@ text = "reset"
 horizontal_alignment = 1
 
 [node name="image_prompt" type="HBoxContainer" parent="."]
+visible = false
 layout_mode = 2
 
 [node name="texture" type="TextureRect" parent="image_prompt"]
