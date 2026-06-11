@@ -118,7 +118,7 @@ func pressed(action:String):
 func released(action:String):
 	return Input.is_action_just_released(action)
 
-func holding(action:String):
+func holding(action:String) -> bool:
 	var i := Input.get_action_strength(action) > 0.0
 	return allow_input and i
 
@@ -227,3 +227,6 @@ func rebind(action: String, input: InputEvent, gamepad: bool):
 	var old := get_input_for_action(action, gamepad)
 	InputMap.action_erase_event(action, old)
 	InputMap.action_add_event(action, input)
+
+func translate(action_name: String) -> String:
+	return tr('action:'+action_name)

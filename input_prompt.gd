@@ -100,7 +100,7 @@ func depict(event: InputEvent, mode = InputManagement.PromptMode.AutoDetect):
 		_show_image(img, extra_text)
 	else:
 		if gamepad:
-			push_error('Missing image for action: %s' % [input_str])
+			push_warning('Missing image for action: %s' % [input_str])
 		show_text(input_str)
 
 func _show_image(image: Texture2D, extra_text:= ''):
