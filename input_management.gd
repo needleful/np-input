@@ -69,7 +69,10 @@ func _input(event: InputEvent):
 		new_prompts = prompt_mode
 	if new_prompts != prompts:
 		prompts = new_prompts
-		get_tree().call_group('input_prompt', '_refresh')
+		_refresh_prompts()
+
+func _refresh_prompts():
+	get_tree().call_group('input_prompt', '_refresh')
 
 func _fixed_process(delta: float):
 	for e in input_buffer.keys():
@@ -90,11 +93,14 @@ func detect_gamepad_type(device: int) -> PromptMode:
 		type = PromptMode.GenericGamepad
 	known_devices[dname] = type
 	print('New controler: %d (%s: %s)' % [device, dname, PromptMode.keys()[type]])
-	gamepad_mode = prompt_mode
+	gamepad_mode = type
 	return type
 
 func set_prompt_mode(mode: int):
 	prompt_mode = mode as PromptMode
+	if prompt_mode > PromptMode.Keyboard:
+		gamepad_mode = prompt_mode
+	_refresh_prompts()
 
 func reset(key: String):
 	input_buffer[key] = INF
@@ -123,6 +129,15 @@ static func default_input_for_action(action: String, gamepad: bool) -> InputEven
 		return null
 	return _first_action(settings.events, gamepad)
 
+static func get_input_for_action_and_mode(action: String, mode: PromptMode) -> InputEvent:
+	var g := false
+	match mode:
+		PromptMode.Keyboard:
+			g = false
+		_:
+			g = true
+	return get_input_for_action(action, g)
+
 static func get_input_for_action(action: String, gamepad: bool) -> InputEvent:
 	return _first_action(InputMap.action_get_events(action), gamepad)
 
@@ -148,8 +163,6 @@ func get_action_input_string(action: String, override = null):
 		gamepad = using_gamepad
 
 	var input := get_input_for_action(action, gamepad)
-	
-
 	return get_input_string(input)
 
 func get_input_string(input:InputEvent) -> String:
@@ -171,24 +184,33 @@ func get_input_string(input:InputEvent) -> String:
 		return key_str
 	return str(input)
 
-func load_input_image(input_str: String) -> Texture2D:
+func load_input_image(input_str: String, mode: PromptMode) -> Texture2D:
+	var gamepad: bool
+	if mode == PromptMode.AutoDetect:
+		mode = prompts
+		gamepad = using_gamepad
 	var custom_prompt: String
-	match prompts:
+	match mode:
 		PromptMode.Keyboard:
 			custom_prompt = custom_keyboard
+			gamepad = false
 		PromptMode.Nintendo:
 			custom_prompt = custom_nintendo
+			gamepad = true
 		PromptMode.Playstation:
 			custom_prompt = custom_play_station
+			gamepad = true
 		PromptMode.XBox:
 			custom_prompt = custom_x_box
+			gamepad = true
 		_:
 			custom_prompt = custom_generic
+			gamepad = true
 	var prompt : String
 	if custom_prompt:
 		prompt = '%s/%s.png' % [custom_prompt, input_str]
 	else:
-		var device = 'pad_generic' if using_gamepad else 'keyboard'
+		var device = 'pad_generic' if gamepad else 'keyboard'
 		prompt = f_prompt_path % [device, input_str]
 		
 	if ResourceLoader.exists(prompt):
@@ -199,3 +221,9 @@ func load_input_image(input_str: String) -> Texture2D:
 func get_mouse_zoom_axis() -> float:
 	return 15*( float(Input.is_action_just_released('mouse_zoom_in'))
 			- float(Input.is_action_just_released('mouse_zoom_out')) )
+
+# Assumes only one action given
+func rebind(action: String, input: InputEvent, gamepad: bool):
+	var old := get_input_for_action(action, gamepad)
+	InputMap.action_erase_event(action, old)
+	InputMap.action_add_event(action, input)

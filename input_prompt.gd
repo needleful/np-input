@@ -74,12 +74,17 @@ func set_action(a):
 	var event := InputManagement.get_input_for_action(action, InputManagement.using_gamepad)
 	depict(event)
 
+func depict_action(action: String, mode: InputManagement.PromptMode):
+	var gamepad := InputManagement.get_input_for_action
+	var event := InputManagement.get_input_for_action_and_mode(action, mode)
+	depict(event)
+
 func depict(event: InputEvent, mode = InputManagement.PromptMode.AutoDetect):
 	var input_str := InputManagement.get_input_string(event)
-	var img := InputManagement.load_input_image(input_str)
+	var img := InputManagement.load_input_image(input_str, mode)
 	var gc: InputManagement.PromptMode
 	var gamepad : bool
-	if !mode:
+	if not mode:
 		gc = InputManagement.prompts
 		gamepad = InputManagement.using_gamepad
 	else:
@@ -94,6 +99,8 @@ func depict(event: InputEvent, mode = InputManagement.PromptMode.AutoDetect):
 				extra_text = required_text[IG.GenericGamepad][input_str]
 		_show_image(img, extra_text)
 	else:
+		if gamepad:
+			push_error('Missing image for action: %s' % [input_str])
 		show_text(input_str)
 
 func _show_image(image: Texture2D, extra_text:= ''):
