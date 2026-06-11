@@ -6,6 +6,7 @@ extends Control
 @export_range(0.1, 2.0) var image_scale := 1.0
 # For backwards-compatibility
 @export var small := false
+@export var show_extra_hint := true
 
 var default_size := Vector2(64, 64)
 
@@ -86,7 +87,7 @@ func depict(event: InputEvent, mode = InputManagement.PromptMode.AutoDetect):
 		gamepad = mode > InputManagement.PromptMode.Keyboard
 	if img:
 		var extra_text := ''
-		if gamepad:
+		if gamepad and show_extra_hint:
 			if input_str in required_text[gc]:
 				extra_text = required_text[gc][input_str]
 			elif input_str in required_text[IG.GenericGamepad]:
