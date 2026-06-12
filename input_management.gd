@@ -18,8 +18,8 @@ const INPUT_EPSILON := 0.1
 var input_buffer:Dictionary[String, float] = {}
 
 @export var prompt_mode := PromptMode.AutoDetect
-# Swap A/B and X/Y input when using a Nintendo controller
-# TODO: implement
+## Swap A/B and X/Y input when using a Nintendo controller
+## Uh it's not implemented yet.
 @export var nintendo_swap := false
 
 @export_group('Custom Paths', 'custom_')
@@ -93,7 +93,8 @@ func detect_gamepad_type(device: int) -> PromptMode:
 		type = PromptMode.GenericGamepad
 	known_devices[dname] = type
 	print('New controler: %d (%s: %s)' % [device, dname, PromptMode.keys()[type]])
-	gamepad_mode = type
+	if prompt_mode <= PromptMode.Keyboard:
+		gamepad_mode = type
 	return type
 
 func set_prompt_mode(mode: int):
