@@ -41,6 +41,9 @@ var using_gamepad: bool:
 var allow_input := true
 
 var known_devices: Dictionary[String, PromptMode]
+# I don't like how Godot grabs the mouse even when games aren't focused
+var mouse_mode: Input.MouseMode = Input.MOUSE_MODE_VISIBLE:
+	set = set_mouse_mode
 
 func _ready():
 	if Engine.is_editor_hint():
@@ -49,6 +52,12 @@ func _ready():
 	# TODO: time_scale_response = false
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	get_tree().call_group('input_prompt', '_refresh')
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_WM_WINDOW_FOCUS_IN:
+		Input.mouse_mode = mouse_mode
+	elif what == NOTIFICATION_WM_WINDOW_FOCUS_OUT:
+		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 
 func _input(event: InputEvent):
 	# Do not accept input when pressing a button
@@ -70,6 +79,11 @@ func _input(event: InputEvent):
 	if new_prompts != prompts:
 		prompts = new_prompts
 		_refresh_prompts()
+
+func set_mouse_mode(m: Input.MouseMode):
+	mouse_mode = m
+	if DisplayServer.window_is_focused():
+		Input.mouse_mode = m
 
 func _refresh_prompts():
 	get_tree().call_group('input_prompt', '_refresh')
